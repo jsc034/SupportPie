@@ -1,0 +1,21 @@
+Type		
+0: QM/UR		
+1: Ranked (HL/TL)		
+2: Custom/Scrim		
+3: Tournament		
+		
+D1,...,D8
+1: too aggressive/greedy		
+2: positioning		
+3: missed a defensive CD		
+4: facecheck		
+5: trade		
+6: teamfight		
+7: overextended		
+8: no respect for their kill potential		
+9: defending the core		
+10: attacking the core		
+11: ganked/map awareness		
+12: died trying to save someone		
+13: bad/greedy/unsafe rotation		
+14: B-ing greedily		
