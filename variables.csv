@@ -1,3 +1,10 @@
+Type
+0: QM/UR
+1: Ranked (HL/TL)
+2: Custom/Scrim
+3: Tournament
+
+D1,...,D8
 1: too aggressive/greedy
 2: positioning
 3: missed a defensive CD
