@@ -6,56 +6,64 @@
 library(readr)
 
 #Lucio !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-LucioA <- read_csv("C:/Users/Joshua/Downloads/SupportPie - Lucio.csv")
+LucioA <- read_csv("~/GitHub/SupportPie/SupportPie - Lucio.csv")
 Lucio <- LucioA[2:nrow(LucioA),] #removing the avg I have on the 1st row
 
-#histograms of Stats
 breaksN=15
 
-upperBoundX <- max(max(Lucio$`Game LengthS`),max(Lucio$`10 ReachedS`),max(Lucio$DiffS))
+#Times
+lowerBoundX <- min(min(Lucio$LengthS),min(Lucio$TenS),min(Lucio$DiffS))
+upperBoundX <- max(max(Lucio$LengthS),max(Lucio$TenS),max(Lucio$DiffS))
 upperBoundY <- length(Lucio$DiffS)/2
-GameLength_Lucio <- hist(Lucio$`Game LengthS`,breaks=breaksN,plot=F)
-Reach10_Lucio <- hist(Lucio$`10 ReachedS`,breaks=breaksN,plot=F)
+Length_Lucio <- hist(Lucio$LengthS,breaks=breaksN,plot=F)
+Ten_Lucio <- hist(Lucio$TenS,breaks=breaksN,plot=F)
 Diff_Lucio <- hist(Lucio$DiffS,breaks=breaksN,plot=F)
-plot(GameLength_Lucio, col=rgb(1,0,0,1/4),xlim=c(0,upperBoundX),ylim=c(0,upperBoundY),main='Lucio Times',xlab='seconds')
-plot(Reach10_Lucio, col=rgb(0,1,0,1/4), add=T)
+plot(Length_Lucio, col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main='Lucio Times',xlab='seconds') #1st plot should have title & labels
+plot(Ten_Lucio, col=rgb(0,1,0,1/4), add=T)
 plot(Diff_Lucio, col=rgb(0,0,1,1/4), add=T)
-abline(v=mean(Lucio$`Game LengthS`),col='red',lw=1)
-abline(v=mean(Lucio$`10 ReachedS`),col='green',lw=1)
+abline(v=mean(Lucio$LengthS),col='red',lw=1)
+abline(v=mean(Lucio$TenS),col='green',lw=1)
 abline(v=mean(Lucio$DiffS),col='blue',lw=1)
 
-
-Ult_Lucio_SB <- hist(Lucio$`Sound Barrier`,plot=F)
-UltSuccess_Lucio_SB <- hist(Lucio$`Sound Barrier Success`,plot=F)
-plot(Ult_Lucio_SB, col=rgb(0,0,1,1/4), xlim=c(0,max(Lucio$`Sound Barrier`)),main='Sound Barrier Ults',xlab='ults')  #1st plot should have title & labels
+#Ults
+Ult_Lucio_SB <- hist(Lucio$SoundBarrier,plot=F)
+UltSuccess_Lucio_SB <- hist(Lucio$SoundBarrierSuccess,plot=F)
+plot(Ult_Lucio_SB, col=rgb(0,0,1,1/4), xlim=c(0,max(Lucio$SoundBarrier)),main='Sound Barrier Ults',xlab='ults') # #ults > #ult success
 plot(UltSuccess_Lucio_SB, col=rgb(1,0,0,1/4), add=T)
-abline(v=mean(Lucio$`Sound Barrier`),col='blue',lw=3)
-abline(v=mean(Lucio$`Sound Barrier Success`),col='red',lw=3)
+abline(v=mean(Lucio$SoundBarrier),col='blue',lw=3)
+abline(v=mean(Lucio$SoundBarrierSuccess),col='red',lw=3)
 
-UltPercent_Lucio_SB <- hist(Lucio$Percent,main='Lucio Avg Ult Success Percent',xlab='percent',breaks=breaksN) #############change percent to SB percent
-abline(v=mean(Lucio$Percent),col='red',lw=3)
+UltPercent_Lucio_SB <- hist(Lucio$SoundBarrierPercent,breaks=breaksN,plot=F)
+UltPM_Lucio <- hist(Lucio$UltPM,breaks=breaksN,plot=F)
+plot(UltPercent_Lucio_SB, col=rgb(0,0,1,1/4), xlim=c(0,1),main='Lucio Ult Percent & Ult Per Minute',xlab='percent/ults per min')
+plot(UltPM_Lucio, col=rgb(1,0,0,1/4), add=T)
+abline(v=mean(Lucio$SoundBarrierPercent),col='blue',lw=3)
+abline(v=mean(Lucio$UltPM),col='red',lw=3)
 
-Assists_Lucio <- hist(Lucio$Assists,main='Lucio Assists',xlab='assists')
-abline(v=mean(Lucio$Assists),col='red',lw=3)
+#KDA
+upperBoundY <- length(Lucio$Kills)*.8
+Kills_Lucio <- hist(Lucio$Kills,plot=F)
+Assists_Lucio <- hist(Lucio$Assists,plot=F)
+Deaths_Lucio <- hist(Lucio$Deaths,plot=F)
+plot(Kills_Lucio, col=rgb(1,0,0,1/4), xlim=c(0,max(Lucio$Assists)),ylim=c(0,upperBoundY),main='Lucio KDA',xlab='value') # #assists > #deaths/#kills 
+plot(Assists_Lucio, col=rgb(0,1,0,1/4), add=T)
+plot(Deaths_Lucio, col=rgb(0,0,1,1/4), add=T)
+abline(v=mean(Lucio$Kills),col='red',lw=3)
+abline(v=mean(Lucio$Assists),col='green',lw=3)
+abline(v=mean(Lucio$Deaths),col='blue',lw=3)
 
-Deaths_Lucio <- hist(Lucio$Deaths,main='Lucio Deaths',xlab='deaths')
-abline(v=mean(Lucio$Deaths),col='red',lw=3)
-
-#per-minute stats
-upperBoundX <- max(max(Lucio$`Avg Ult Per Minute`),max(Lucio$`Kills Per Minute`),max(Lucio$`Assists Per Minute`),max(Lucio$`Deaths Per Minute`))
-upperBoundY <- length(Lucio$`Kills Per Minute`)/2
-UltPerMin_Lucio <- hist(Lucio$`Avg Ult Per Minute`,breaks=breaksN,plot=F) #########################change Avg Ult per min to ult per min
-KillsPerMin_Lucio <- hist(Lucio$`Kills Per Minute`,breaks=breaksN,plot=F)
-AssistsPerMin_Lucio <- hist(Lucio$`Assists Per Minute`,breaks=breaksN,plot=F)
-DeathsPerMin_Lucio <- hist(Lucio$`Deaths Per Minute`,breaks=breaksN,plot=F)
-plot(UltPerMin_Lucio, col=rgb(1,1,0,1/4), xlim=c(0,upperBound), ylim= c(0,upperBoundY), main='Lucio Stats Per Min',xlab='per min')  #1st plot should have title & labels
-plot(KillsPerMin_Lucio, col=rgb(1,0,0,1/4), add=T)
-plot(AssistsPerMin_Lucio, col=rgb(0,1,0,1/4), add=T)
-plot(DeathsPerMin_Lucio, col=rgb(0,0,1,1/4), add=T)
-abline(v=mean(Lucio$`Avg Ult Per Minute`),col='yellow',lw=1)
-abline(v=mean(Lucio$`Kills Per Minute`),col='red',lw=1)
-abline(v=mean(Lucio$`Assists Per Minute`),col='green',lw=1)
-abline(v=mean(Lucio$`Deaths Per Minute`),col='blue',lw=1)
+lowerBoundX <- min(min(Lucio$KillsPM),min(Lucio$AssistsPM),min(Lucio$DeathsPM))
+upperBoundX <- max(max(Lucio$KillsPM),max(Lucio$AssistsPM),max(Lucio$DeathsPM))
+upperBoundY <- length(Lucio$KillsPM)/2
+KillsPM_Lucio <- hist(Lucio$KillsPM,breaks=breaksN,plot=F)
+AssistsPM_Lucio <- hist(Lucio$AssistsPM,breaks=breaksN,plot=F)
+DeathsPM_Lucio <- hist(Lucio$DeathsPM,breaks=breaksN,plot=F)
+plot(KillsPM_Lucio,col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main='Lucio KDA Per Min',xlab='per min')
+plot(AssistsPM_Lucio, col=rgb(0,1,0,1/4), add=T)
+plot(DeathsPM_Lucio, col=rgb(0,0,1,1/4), add=T)
+abline(v=mean(Lucio$KillsPM),col='red',lw=3)
+abline(v=mean(Lucio$AssistsPM),col='green',lw=3)
+abline(v=mean(Lucio$DeathsPM),col='blue',lw=3)
 
 
 #Death Pie Chart
