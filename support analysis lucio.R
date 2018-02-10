@@ -5,143 +5,147 @@
 
 library(readr)
 
+name <- 'Lucio'
 #Lucio !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-LucioA <- read_csv("~/GitHub/SupportPie/SupportPie - Lucio.csv")
-Lucio <- LucioA[2:nrow(LucioA),] #removing the avg I have on the 1st row
+file <- sprintf("~/GitHub/SupportPie/SupportPie - %s.csv",name)
+DFA <- read_csv(file)
+DF <- DFA[2:nrow(DFA),] #removing the avg I have on the 1st row
 
 breaksN=15
 
 #Times
-lowerBoundX <- min(min(Lucio$LengthS),min(Lucio$TenS),min(Lucio$DiffS))
-upperBoundX <- max(max(Lucio$LengthS),max(Lucio$TenS),max(Lucio$DiffS))
-upperBoundY <- length(Lucio$DiffS)*.5
-Length_Lucio <- hist(Lucio$LengthS,breaks=breaksN,plot=F)
-Ten_Lucio <- hist(Lucio$TenS,breaks=breaksN,plot=F)
-Diff_Lucio <- hist(Lucio$DiffS,breaks=breaksN,plot=F)
-plot(Length_Lucio, col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main='Lucio Times',xlab='seconds',las=1) #1st plot should have title & labels
-plot(Ten_Lucio, col=rgb(0,1,0,1/4), add=T)
-plot(Diff_Lucio, col=rgb(0,0,1,1/4), add=T)
-abline(v=mean(Lucio$LengthS),col='red',lw=1)
-abline(v=mean(Lucio$TenS),col='green',lw=1)
-abline(v=mean(Lucio$DiffS),col='blue',lw=1)
+lowerBoundX <- min(min(DF$LengthS),min(DF$TenS),min(DF$DiffS))
+upperBoundX <- max(max(DF$LengthS),max(DF$TenS),max(DF$DiffS))
+upperBoundY <- length(DF$DiffS)*.5
+Length_DF <- hist(DF$LengthS,breaks=breaksN,plot=F)
+Ten_DF <- hist(DF$TenS,breaks=breaksN,plot=F)
+Diff_DF <- hist(DF$DiffS,breaks=breaksN,plot=F)
+title <- sprintf('%s Times',name)
+plot(Length_DF, col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='seconds',las=1) #1st plot should have title & labels
+plot(Ten_DF, col=rgb(0,1,0,1/4), add=T)
+plot(Diff_DF, col=rgb(0,0,1,1/4), add=T)
+abline(v=mean(DF$LengthS),col='red',lw=1)
+abline(v=mean(DF$TenS),col='green',lw=1)
+abline(v=mean(DF$DiffS),col='blue',lw=1)
 legend("topright",inset=.05,c('Game Length','10 Reached','Difference'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
 
 #Ults
-upperBoundY <- length(Lucio$SoundBarrier)*.4
-Ult_Lucio_SB <- hist(Lucio$SoundBarrier,plot=F)
-UltSuccess_Lucio_SB <- hist(Lucio$SoundBarrierSuccess,plot=F)
-plot(Ult_Lucio_SB, col=rgb(0,0,1,1/4), xlim=c(0,max(Lucio$SoundBarrier)),ylim=c(0,upperBoundY),main='Lucio Sound Barriers',xlab='ults',las=1) # #ults > #ult success
-plot(UltSuccess_Lucio_SB, col=rgb(1,0,0,1/4), add=T)
-abline(v=mean(Lucio$SoundBarrier),col='blue',lw=3)
-abline(v=mean(Lucio$SoundBarrierSuccess),col='red',lw=3)
+upperBoundY <- length(DF$SoundBarrier)*.4
+Ult_DF_1 <- hist(DF$SoundBarrier,plot=F)
+UltSuccess_DF_1 <- hist(DF$SoundBarrierSuccess,plot=F)
+title <- sprintf('%s Sound Barriers',name)
+plot(Ult_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,max(DF$SoundBarrier)),ylim=c(0,upperBoundY),main=title,xlab='ults',las=1) # #ults > #ult success
+plot(UltSuccess_DF_1, col=rgb(1,0,0,1/4), add=T)
+abline(v=mean(DF$SoundBarrier),col='blue',lw=3)
+abline(v=mean(DF$SoundBarrierSuccess),col='red',lw=3)
 legend("topright",inset=.05,c('Ults Casted','Ult Successful'), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
 
-UltPercent_Lucio_SB <- hist(Lucio$SoundBarrierPercent,breaks=breaksN,plot=F)
-UltPM_Lucio <- hist(Lucio$UltPM,breaks=breaksN,plot=F)
-plot(UltPercent_Lucio_SB, col=rgb(0,0,1,1/4), xlim=c(0,1),main='Lucio Ult Percent & Ult Per Minute',xlab='percent/ults per min',las=1)
-plot(UltPM_Lucio, col=rgb(1,0,0,1/4), add=T)
-abline(v=mean(Lucio$SoundBarrierPercent),col='blue',lw=3)
-abline(v=mean(Lucio$UltPM),col='red',lw=3)
+UltPercent_DF_1 <- hist(DF$SoundBarrierPercent,breaks=breaksN,plot=F)
+UltPM_DF <- hist(DF$UltPM,breaks=breaksN,plot=F)
+title <- sprintf('%s Ult Percent & Ult Per Minute',name)
+plot(UltPercent_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,1),main=title,xlab='percent/ults per min',las=1)
+plot(UltPM_DF, col=rgb(1,0,0,1/4), add=T)
+abline(v=mean(DF$SoundBarrierPercent),col='blue',lw=3)
+abline(v=mean(DF$UltPM),col='red',lw=3)
 legend("topleft",inset=.05,c('Ult Success Percent','Ults Per Minute'), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
 
 #KDA
-upperBoundY <- length(Lucio$Kills)*.8
-Kills_Lucio <- hist(Lucio$Kills,plot=F)
-Assists_Lucio <- hist(Lucio$Assists,plot=F)
-Deaths_Lucio <- hist(Lucio$Deaths,plot=F)
-plot(Kills_Lucio, col=rgb(1,0,0,1/4), xlim=c(0,max(Lucio$Assists)),ylim=c(0,upperBoundY),main='Lucio KDA',xlab='value',las=1) # #assists > #deaths/#kills 
-plot(Assists_Lucio, col=rgb(0,1,0,1/4), add=T)
-plot(Deaths_Lucio, col=rgb(0,0,1,1/4), add=T)
-abline(v=mean(Lucio$Kills),col='red',lw=3)
-abline(v=mean(Lucio$Assists),col='green',lw=3)
-abline(v=mean(Lucio$Deaths),col='blue',lw=3)
+upperBoundY <- length(DF$Kills)*.8
+Kills_DF <- hist(DF$Kills,plot=F)
+Assists_DF <- hist(DF$Assists,plot=F)
+Deaths_DF <- hist(DF$Deaths,plot=F)
+title <- sprintf('%s KDA',name)
+plot(Kills_DF, col=rgb(1,0,0,1/4), xlim=c(0,max(DF$Assists)),ylim=c(0,upperBoundY),main=title,xlab='value',las=1) # #assists > #deaths/#kills 
+plot(Assists_DF, col=rgb(0,1,0,1/4), add=T)
+plot(Deaths_DF, col=rgb(0,0,1,1/4), add=T)
+abline(v=mean(DF$Kills),col='red',lw=3)
+abline(v=mean(DF$Assists),col='green',lw=3)
+abline(v=mean(DF$Deaths),col='blue',lw=3)
 legend("topright",inset=.05,c('Kills','Assists','Deaths'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
 
-lowerBoundX <- min(min(Lucio$KillsPM),min(Lucio$AssistsPM),min(Lucio$DeathsPM))
-upperBoundX <- max(max(Lucio$KillsPM),max(Lucio$AssistsPM),max(Lucio$DeathsPM))
-upperBoundY <- length(Lucio$KillsPM)*.5
-KillsPM_Lucio <- hist(Lucio$KillsPM,breaks=breaksN,plot=F)
-AssistsPM_Lucio <- hist(Lucio$AssistsPM,breaks=breaksN,plot=F)
-DeathsPM_Lucio <- hist(Lucio$DeathsPM,breaks=breaksN,plot=F)
-plot(KillsPM_Lucio,col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main='Lucio KDA Per Min',xlab='per min',las=1)
-plot(AssistsPM_Lucio, col=rgb(0,1,0,1/4), add=T)
-plot(DeathsPM_Lucio, col=rgb(0,0,1,1/4), add=T)
-abline(v=mean(Lucio$KillsPM),col='red',lw=3)
-abline(v=mean(Lucio$AssistsPM),col='green',lw=3)
-abline(v=mean(Lucio$DeathsPM),col='blue',lw=3)
+lowerBoundX <- min(min(DF$KillsPM),min(DF$AssistsPM),min(DF$DeathsPM))
+upperBoundX <- max(max(DF$KillsPM),max(DF$AssistsPM),max(DF$DeathsPM))
+upperBoundY <- length(DF$KillsPM)*.5
+KillsPM_DF <- hist(DF$KillsPM,breaks=breaksN,plot=F)
+AssistsPM_DF <- hist(DF$AssistsPM,breaks=breaksN,plot=F)
+DeathsPM_DF <- hist(DF$DeathsPM,breaks=breaksN,plot=F)
+title <- sprintf('%s KDA Per Min',name)
+plot(KillsPM_DF,col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='per min',las=1)
+plot(AssistsPM_DF, col=rgb(0,1,0,1/4), add=T)
+plot(DeathsPM_DF, col=rgb(0,0,1,1/4), add=T)
+abline(v=mean(DF$KillsPM),col='red',lw=3)
+abline(v=mean(DF$AssistsPM),col='green',lw=3)
+abline(v=mean(DF$DeathsPM),col='blue',lw=3)
 legend("topright",inset=.05,c('Kills Per Minute','Assists Per minute','Deaths Per Minute'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
 
 #Stats
-lowerBoundX <- min(min(Lucio$Siege),min(Lucio$Hero),min(Lucio$Healing),min(Lucio$XP))
-upperBoundX <- max(max(Lucio$Siege),max(Lucio$Hero),max(Lucio$Healing),max(Lucio$XP))
-upperBoundY <- length(Lucio$Siege)*.3
-Siege_Lucio <- hist(Lucio$Siege,breaks=breaksN,plot=F)
-Hero_Lucio <- hist(Lucio$Hero,breaks=breaksN,plot=F)
-Healing_Lucio <- hist(Lucio$Healing,breaks=breaksN,plot=F)
-XP_Lucio <- hist(Lucio$XP,breaks=breaksN,plot=F)
-plot(Siege_Lucio, col=rgb(1,0,0,1/4), xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main='Lucio Stats',xlab='value',las=1)
-plot(Hero_Lucio, col=rgb(0,1,0,1/4), add=T)
-plot(Healing_Lucio, col=rgb(0,0,1,1/4), add=T)
-plot(XP_Lucio, col=rgb(1,1,0,1/4), add=T)
-abline(v=mean(Lucio$Siege),col='red',lw=3)
-abline(v=mean(Lucio$Hero),col='green',lw=3)
-abline(v=mean(Lucio$Healing),col='blue',lw=3)
-abline(v=mean(Lucio$XP),col='yellow',lw=3)
+lowerBoundX <- min(min(DF$Siege),min(DF$Hero),min(DF$Healing),min(DF$XP))
+upperBoundX <- max(max(DF$Siege),max(DF$Hero),max(DF$Healing),max(DF$XP))
+upperBoundY <- length(DF$Siege)*.3
+Siege_DF <- hist(DF$Siege,breaks=breaksN,plot=F)
+Hero_DF <- hist(DF$Hero,breaks=breaksN,plot=F)
+Healing_DF <- hist(DF$Healing,breaks=breaksN,plot=F)
+XP_DF <- hist(DF$XP,breaks=breaksN,plot=F)
+title <- sprintf('%s Stats',name)
+plot(Siege_DF, col=rgb(1,0,0,1/4), xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='value',las=1)
+plot(Hero_DF, col=rgb(0,1,0,1/4), add=T)
+plot(Healing_DF, col=rgb(0,0,1,1/4), add=T)
+plot(XP_DF, col=rgb(1,1,0,1/4), add=T)
+abline(v=mean(DF$Siege),col='red',lw=3)
+abline(v=mean(DF$Hero),col='green',lw=3)
+abline(v=mean(DF$Healing),col='blue',lw=3)
+abline(v=mean(DF$XP),col='yellow',lw=3)
 legend("topright",inset=.05,c('Siege Damage','Hero Damage','Healing/Shielding','XP Contribution'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2),rgb(1,1,0,1/2)))
 
-lowerBoundX <- min(min(Lucio$SiegePM),min(Lucio$HeroPM),min(Lucio$HealingPM),min(Lucio$XPPM))
-upperBoundX <- max(max(Lucio$SiegePM),max(Lucio$HeroPM),max(Lucio$HealingPM),max(Lucio$XPPM))
-upperBoundY <- length(Lucio$SiegePM)*.4
-SiegePM_Lucio <- hist(Lucio$SiegePM,breaks=breaksN,plot=F)
-HeroPM_Lucio <- hist(Lucio$HeroPM,breaks=breaksN,plot=F)
-HealingPM_Lucio <- hist(Lucio$HealingPM,breaks=breaksN,plot=F)
-XPPM_Lucio <- hist(Lucio$XPPM,breaks=breaksN,plot=F)
-plot(SiegePM_Lucio, col=rgb(1,0,0,1/4), xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main='Lucio Stats Per Min',xlab='value',las=1)
-plot(HeroPM_Lucio, col=rgb(0,1,0,1/4), add=T)
-plot(HealingPM_Lucio, col=rgb(0,0,1,1/4), add=T)
-plot(XPPM_Lucio, col=rgb(1,1,0,1/4), add=T)
-abline(v=mean(Lucio$SiegePM),col='red',lw=3)
-abline(v=mean(Lucio$HeroPM),col='green',lw=3)
-abline(v=mean(Lucio$HealingPM),col='blue',lw=3)
-abline(v=mean(Lucio$XPPM),col='yellow',lw=3)
+lowerBoundX <- min(min(DF$SiegePM),min(DF$HeroPM),min(DF$HealingPM),min(DF$XPPM))
+upperBoundX <- max(max(DF$SiegePM),max(DF$HeroPM),max(DF$HealingPM),max(DF$XPPM))
+upperBoundY <- length(DF$SiegePM)*.4
+SiegePM_DF <- hist(DF$SiegePM,breaks=breaksN,plot=F)
+HeroPM_DF <- hist(DF$HeroPM,breaks=breaksN,plot=F)
+HealingPM_DF <- hist(DF$HealingPM,breaks=breaksN,plot=F)
+XPPM_DF <- hist(DF$XPPM,breaks=breaksN,plot=F)
+title <- sprintf('%s Stats Per Min',name)
+plot(SiegePM_DF, col=rgb(1,0,0,1/4), xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='value',las=1)
+plot(HeroPM_DF, col=rgb(0,1,0,1/4), add=T)
+plot(HealingPM_DF, col=rgb(0,0,1,1/4), add=T)
+plot(XPPM_DF, col=rgb(1,1,0,1/4), add=T)
+abline(v=mean(DF$SiegePM),col='red',lw=3)
+abline(v=mean(DF$HeroPM),col='green',lw=3)
+abline(v=mean(DF$HealingPM),col='blue',lw=3)
+abline(v=mean(DF$XPPM),col='yellow',lw=3)
 legend("topright",inset=.05,c('Siege Per Minute','Hero Per Minute','Healing Per Minute','XP Per Minute'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2),rgb(1,1,0,1/2)))
 
 #Death Pie Chart
-Deaths_Pie_Lucio <- c(Lucio$D1,Lucio$D2,Lucio$D3) #,Lucio$`Death 4`,Lucio$`Death 5`)
-Deaths_Pie_Lucio <- Deaths_Pie_Lucio[!is.na(Deaths_Pie_Lucio)]
+Deaths_Pie_DF <- c(DF$D1,DF$D2,DF$D3,DF$D4,DF$D5,DF$D6,DF$D7,DF$D8)
+Deaths_Pie_DF <- as.numeric(Deaths_Pie_DF[!is.na(Deaths_Pie_DF)])
 lab <- c('too aggro','positioning','missed a defnesive CD','facecheck','trade','teamfight','overextended','no respect for kill potential','defending core','attacking core','ganked/map awareness','died trying to save someone','bad/greedy rotation','B-ing greedy')
 indicator <- rep(F,length(lab))
 counts <- rep(0,length(lab))
-for(i in Deaths_Pie_Lucio){
+for(i in Deaths_Pie_DF){
   indicator[i] <- T
   counts[i] <- counts[i] + 1
 }
-title = sprintf('Lucio Deaths n=%d',length(Deaths_Pie_Lucio))
-pie(table(Deaths_Pie_Lucio),labels=lab[indicator],main=title)
+title = sprintf('%s Deaths n=%d',name,length(Deaths_Pie_DF))
+pie(table(Deaths_Pie_DF),labels=lab[indicator],main=title)
 
 #Deaths by time played
-Deaths_By_Time_Lucio <- rep(0,24)
-Time_Lucio <- Lucio$Time[!is.na(Lucio$Time)]
-for(i in 36:nrow(Lucio)){
-  t <- Lucio[i,]$Time
-  d <- as.numeric(Lucio[i,30:37]) ######################################## dangerous hard coded numbers
-  Deaths_By_Time_Lucio[t+1] = Deaths_By_Time_Lucio[t+1] + length(d[!is.na(d)])
+Deaths_By_Time_DF <- rep(0,24)
+Time_DF <- DF$Time[!is.na(DF$Time)]
+death_start <- min(which(!is.na(DF$Time))) #calculates the row of the 1st recorded real time hour
+death_columns <- c('D1','D2','D3','D4','D5','D6','D7','D8')
+for(i in death_start:nrow(DF)){ 
+  t <- DF[i,]$Time
+  d <- as.numeric(DF[i,death_columns])
+  Deaths_By_Time_DF[t+1] = Deaths_By_Time_DF[t+1] + length(d[!is.na(d)])
 }
-title = sprintf('Lucio Deaths by the Hour n=%d',sum(Deaths_By_Time_Lucio))
-plot(0:23,Deaths_By_Time_Lucio,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
+title = sprintf('%s Deaths by the Hour n=%d',name,sum(Deaths_By_Time_DF))
+plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
 
 
 
 
-#rbind(0:23,Deaths_By_Time_Lucio)
+#rbind(0:23,Deaths_By_Time_DF)
 
-#test
-# clinical.trial <-
-#   data.frame(patient = 1:100,
-#              age = rnorm(100, mean = 60, sd = 6),
-#              treatment = gl(2, 50,
-#                             labels = c("Treatment", "Control")),
-#              center = sample(paste("Center", LETTERS[1:5]), 100, replace = TRUE))
 
 #typeof(*)
 
@@ -150,4 +154,3 @@ plot(0:23,Deaths_By_Time_Lucio,main=title,xlab='Real Time Hour',ylab='Deaths',pc
 # t = table(deaths)
 # t[names(t)==1]
 # which()
-
