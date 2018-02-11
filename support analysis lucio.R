@@ -5,13 +5,17 @@
 
 library(readr)
 
-name <- 'Lucio'
-#Lucio !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#Constants
+name <- 'Rehgar'
+breaksN <- 15
+lab <- c('too aggro','positioning','missed a defnesive CD','facecheck','trade','teamfight','overextended','no respect for kill potential','defending core','attacking core','ganked/map awareness','died trying to save someone','bad/greedy rotation','B-ing greedy')
+
+#for loop over all supports
 file <- sprintf("~/GitHub/SupportPie/SupportPie - %s.csv",name)
 DFA <- read_csv(file)
 DF <- DFA[2:nrow(DFA),] #removing the avg I have on the 1st row
 
-breaksN=15
+#General Analysis !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #Times
 lowerBoundX <- min(min(DF$LengthS),min(DF$TenS),min(DF$DiffS))
@@ -28,26 +32,6 @@ abline(v=mean(DF$LengthS),col='red',lw=1)
 abline(v=mean(DF$TenS),col='green',lw=1)
 abline(v=mean(DF$DiffS),col='blue',lw=1)
 legend("topright",inset=.05,c('Game Length','10 Reached','Difference'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
-
-#Ults
-upperBoundY <- length(DF$SoundBarrier)*.4
-Ult_DF_1 <- hist(DF$SoundBarrier,plot=F)
-UltSuccess_DF_1 <- hist(DF$SoundBarrierSuccess,plot=F)
-title <- sprintf('%s Sound Barriers',name)
-plot(Ult_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,max(DF$SoundBarrier)),ylim=c(0,upperBoundY),main=title,xlab='ults',las=1) # #ults > #ult success
-plot(UltSuccess_DF_1, col=rgb(1,0,0,1/4), add=T)
-abline(v=mean(DF$SoundBarrier),col='blue',lw=3)
-abline(v=mean(DF$SoundBarrierSuccess),col='red',lw=3)
-legend("topright",inset=.05,c('Ults Casted','Ult Successful'), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
-
-UltPercent_DF_1 <- hist(DF$SoundBarrierPercent,breaks=breaksN,plot=F)
-UltPM_DF <- hist(DF$UltPM,breaks=breaksN,plot=F)
-title <- sprintf('%s Ult Percent & Ult Per Minute',name)
-plot(UltPercent_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,1),main=title,xlab='percent/ults per min',las=1)
-plot(UltPM_DF, col=rgb(1,0,0,1/4), add=T)
-abline(v=mean(DF$SoundBarrierPercent),col='blue',lw=3)
-abline(v=mean(DF$UltPM),col='red',lw=3)
-legend("topleft",inset=.05,c('Ult Success Percent','Ults Per Minute'), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
 
 #KDA
 upperBoundY <- length(DF$Kills)*.8
@@ -118,7 +102,6 @@ legend("topright",inset=.05,c('Siege Per Minute','Hero Per Minute','Healing Per 
 #Death Pie Chart
 Deaths_Pie_DF <- c(DF$D1,DF$D2,DF$D3,DF$D4,DF$D5,DF$D6,DF$D7,DF$D8)
 Deaths_Pie_DF <- as.numeric(Deaths_Pie_DF[!is.na(Deaths_Pie_DF)])
-lab <- c('too aggro','positioning','missed a defnesive CD','facecheck','trade','teamfight','overextended','no respect for kill potential','defending core','attacking core','ganked/map awareness','died trying to save someone','bad/greedy rotation','B-ing greedy')
 indicator <- rep(F,length(lab))
 counts <- rep(0,length(lab))
 for(i in Deaths_Pie_DF){
@@ -141,12 +124,128 @@ for(i in death_start:nrow(DF)){
 title = sprintf('%s Deaths by the Hour n=%d',name,sum(Deaths_By_Time_DF))
 plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
 
+# Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+if(name=='Lucio'){
+  ult_names_indicator <- c(T,F)
+  ult_names <- c('SoundBarrier','SoundBarrierSuccess','SoundBarrierPercent','Ult1PM','ReverseAmp','ReverseAmpSuccess','ReverseAmpPercent','Ult2PM')
+  actives_indicator <- c(F,F,F)
+  actives <- c('a','b','c','d','e','f','g','h','i')
+}else if(name=='Malfurion'){
+  ult_names_indicator <- c(T,F)
+  ult_names <- c('Dream','DreamSuccess','DreamPercent','Ult1PM','Tranquility','TranquilitySuccess','TranquilityPercent','Ult2PM')
+  actives_indicator <- c(T,F,F)
+  actives <- c('IceBlock','IceBlockSuccess','IceBlockPercent','c','e','f','g','h','i')
+}else if(name=='Rehgar'){
+  ult_names_indicator <- c(T,T)
+  ult_names <- c('Ancestral','AncestralSuccess','AncestralPercent','Ult1PM','Bloodlust','BloodlustSuccess','BloodlustPercent','Ult2PM')
+  actives_indicator <- c(T,F,F)
+  actives <- c('Cleanse','CleanseSuccess','CleansePercent','c','e','f','g','h','i')
+}
+
+if(ult_names_indicator[1]){
+  #Ult 1
+  Ult_Cleaned_1 <- DF[[ult_names[1]]]
+  Ult_Cleaned_1 <- Ult_Cleaned_1[ !is.na( Ult_Cleaned_1 ) ]
+  UltSuccess_Cleaned_1 <- DF[[ult_names[2]]]
+  UltSuccess_Cleaned_1 <- UltSuccess_Cleaned_1[ !is.na( UltSuccess_Cleaned_1 ) ]
+  upperBoundY <- length(Ult_Cleaned_1)*.6
+  Ult_DF_1 <- hist(Ult_Cleaned_1,plot=F)
+  UltSuccess_DF_1 <- hist(UltSuccess_Cleaned_1,plot=F)
+  title <- sprintf('%s %s n=%d',name,ult_names[1],length(Ult_Cleaned_1))
+  plot(Ult_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,max(Ult_Cleaned_1)),ylim=c(0,upperBoundY),main=title,xlab='ults',las=1) # #ults > #ult success
+  plot(UltSuccess_DF_1, col=rgb(1,0,0,1/4), add=T)
+  abline(v=mean(Ult_Cleaned_1),col='blue',lw=3)
+  abline(v=mean(UltSuccess_Cleaned_1),col='red',lw=3)
+  label1 <- sprintf('%s Casted',ult_names[1])
+  label2 <- sprintf('%s Successful',ult_names[1])
+  legend("topright",inset=.05,c(label1,label2), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
+  
+  UltPercent_Cleaned_1 <- DF[[ult_names[3]]]
+  UltPercent_Cleaned_1 <- UltPercent_Cleaned_1[ !is.na( UltPercent_Cleaned_1 ) ]
+  UltPM_Cleaned_1 <- DF[[ult_names[4]]]
+  UltPM_Cleaned_1 <- UltPM_Cleaned_1[ !is.na( UltPM_Cleaned_1 ) ]
+  UltPercent_DF_1 <- hist(UltPercent_Cleaned_1,breaks=breaksN,plot=F)
+  UltPM_DF_1 <- hist(UltPM_Cleaned_1,breaks=breaksN,plot=F)
+  title <- sprintf('%s %s Percent & %s Per Minute n=%d',name,ult_names[1],ult_names[1],length(UltPercent_Cleaned_1))
+  plot(UltPercent_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,1),main=title,xlab='percent/ults per min',las=1)
+  plot(UltPM_DF_1, col=rgb(1,0,0,1/4), add=T)
+  abline(v=mean(UltPercent_Cleaned_1),col='blue',lw=3)
+  abline(v=mean(UltPM_Cleaned_1),col='red',lw=3)
+  label3 <- sprintf('%s Percent',ult_names[1])
+  label4 <- sprintf('%s Per Minute',ult_names[1])
+  legend("topleft",inset=.05,c(label3,label4), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
+}
+
+if(ult_names_indicator[2]){
+  #Ult 2
+  Ult_Cleaned_2 <- DF[[ult_names[5]]]
+  Ult_Cleaned_2 <- Ult_Cleaned_2[ !is.na( Ult_Cleaned_2 ) ]
+  UltSuccess_Cleaned_2 <- DF[[ult_names[6]]]
+  UltSuccess_Cleaned_2 <- UltSuccess_Cleaned_2[ !is.na( UltSuccess_Cleaned_2 ) ]
+  upperBoundY <- length(Ult_Cleaned_2)*.6
+  Ult_DF_2 <- hist(Ult_Cleaned_2,plot=F)
+  UltSuccess_DF_2 <- hist(UltSuccess_Cleaned_2,plot=F)
+  title <- sprintf('%s %s n=%d',name,ult_names[5],length(Ult_Cleaned_2))
+  plot(Ult_DF_2, col=rgb(0,0,1,1/4), xlim=c(0,max(Ult_Cleaned_2)),ylim=c(0,upperBoundY),main=title,xlab='ults',las=1) # #ults > #ult success
+  plot(UltSuccess_DF_2, col=rgb(1,0,0,1/4), add=T)
+  abline(v=mean(Ult_Cleaned_2),col='blue',lw=3)
+  abline(v=mean(UltSuccess_Cleaned_2),col='red',lw=3)
+  label1 <- sprintf('%s Casted',ult_names[5])
+  label2 <- sprintf('%s Successful',ult_names[5])
+  legend("topright",inset=.05,c(label1,label2), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
+  
+  UltPercent_Cleaned_2 <- DF[[ult_names[7]]]
+  UltPercent_Cleaned_2 <- UltPercent_Cleaned_2[ !is.na( UltPercent_Cleaned_2 ) ]
+  UltPM_Cleaned_2 <- DF[[ult_names[8]]]
+  UltPM_Cleaned_2 <- UltPM_Cleaned_2[ !is.na( UltPM_Cleaned_2 ) ]
+  UltPercent_DF_2 <- hist(DF[[ult_names[7]]],breaks=breaksN,plot=F)
+  UltPM_DF_2 <- hist(DF[[ult_names[8]]],breaks=breaksN,plot=F)
+  title <- sprintf('%s %s Sucess Percent & %s Per Minute n=%d',name,ult_names[5],ult_names[5],length(UltPercent_Cleaned_2))
+  plot(UltPercent_DF_2, col=rgb(0,0,1,1/4), xlim=c(0,1),main=title,xlab='percent/ults per min',las=1)
+  plot(UltPM_DF_2, col=rgb(1,0,0,1/4), add=T)
+  abline(v=mean(UltPercent_Cleaned_2),col='blue',lw=3)
+  abline(v=mean(UltPM_Cleaned_2),col='red',lw=3)
+  label3 <- sprintf('%s Percent',ult_names[5])
+  label4 <- sprintf('%s Per Minute',ult_names[5])
+  legend("topleft",inset=.05,c(label3,label4), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
+}
+
+if(actives_indicator[1]){
+  #Active 1
+  Actives_Cleaned_1 <- DF[[actives[1]]]
+  Actives_Cleaned_1 <- Actives_Cleaned_1[ !is.na( Actives_Cleaned_1 ) ]
+  ActivesSuccess_Cleaned_1 <- DF[[actives[2]]]
+  ActivesSuccess_Cleaned_1 <- ActivesSuccess_Cleaned_1[ !is.na( ActivesSuccess_Cleaned_1 ) ]
+  upperBoundY <- length(Actives_Cleaned_1)
+  Active_DF_1 <- hist(Actives_Cleaned_1,plot=F)
+  ActiveSuccess_DF_1 <- hist(ActivesSuccess_Cleaned_1,plot=F)
+  title <- sprintf('%s %s n=%d',name,actives[1],length(Actives_Cleaned_1))
+  plot(Active_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,max(Actives_Cleaned_1)),ylim=c(0,upperBoundY),main=title,xlab='counts',las=1)
+  plot(ActiveSuccess_DF_1, col=rgb(1,0,0,1/4), add=T)
+  abline(v=mean(Actives_Cleaned_1),col='blue',lw=3)
+  abline(v=mean(ActivesSuccess_Cleaned_1),col='red',lw=3)
+  label1 <- sprintf('%s Casted',actives[1])
+  label2 <- sprintf('%s Successful',actives[1])
+  legend("topright",inset=.05,c(label1,label2), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
+
+  ActivesPercent_Cleaned_1 <- DF[[actives[3]]]
+  ActivesPercent_Cleaned_1 <- ActivesPercent_Cleaned_1[ !is.na( ActivesPercent_Cleaned_1 ) ]
+  ActivePercent_DF_1 <- hist(ActivesPercent_Cleaned_1,breaks=breaksN,plot=F)
+  title <- sprintf('%s Success Percent n=%d',actives[1],length(ActivesPercent_Cleaned_1))
+  plot(ActivePercent_DF_1, col=rgb(0,0,1,1/4), xlim=c(0,1),main=title,xlab='percent',las=1)
+  abline(v=mean(ActivesPercent_Cleaned_1),col='blue',lw=3)
+  label3 <- sprintf('%s Percent',actives[1])
+  legend("topleft",inset=.05,c(label3), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
+}
+
+
+
+
 
 
 
 #rbind(0:23,Deaths_By_Time_DF)
-
-
 #typeof(*)
 
 # 
@@ -154,3 +253,5 @@ plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=1
 # t = table(deaths)
 # t[names(t)==1]
 # which()
+
+#can use DF[ ['string'] ] to extract as a vector, not a DF slice

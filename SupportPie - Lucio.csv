@@ -1,4 +1,4 @@
-Patch,HL,Map,Win,Length,LengthS,Ten,TenS,Diff,DiffS,UltPM,SoundBarrier,SoundBarrierSuccess,SoundBarrierPercent,Kills,Assists,Deaths,KillsPM,AssistsPM,DeathsPM,Siege,Hero,Healing,XP,SiegePM,HeroPM,HealingPM,XPPM,Time,D1,D2,D3,D4,D5,D6,D7,D8
+Patch,Type,Map,Win,Length,LengthS,Ten,TenS,Diff,DiffS,Ult1PM,SoundBarrier,SoundBarrierSuccess,SoundBarrierPercent,Kills,Assists,Deaths,KillsPM,AssistsPM,DeathsPM,Siege,Hero,Healing,XP,SiegePM,HeroPM,HealingPM,XPPM,Time,D1,D2,D3,D4,D5,D6,D7,D8
 ,,,0.796,16:46,"1,006",06:46,406,10:00,600,0.48,4.61,3.57,0.776,2.00,13.88,1.07,0.12,0.87,0.06,"30,047","17,028","75,446","9,390","1,776","1,025","4,407",561,16.26,,,,,,,,
 2.29.5,,Battlefield of Eternity,1,23:31,"1,411",07:36,456,15:55,955,0.44,7,6,0.857,4,15,1,0.17,0.64,0.04,31688,28958,123656,11991,1347,1231,5258,510,,,,,,,,,
 2.29.5,,Infernal Shrines,1,27:10,"1,630",06:06,366,21:04,"1,264",0.43,9,8,0.889,4,16,4,0.15,0.59,0.15,63044,40300,141355,19142,2321,1483,5203,705,,,,,,,,,
