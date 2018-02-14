@@ -9,16 +9,20 @@ supports <- c('Alexstrasza','Lucio','Malfurion','Rehgar','Stukov','Uther') #fix 
 #supports <- 'Uther'
 breaksN <- 15
 lab <- c('too aggro','positioning','missed a defnesive CD','facecheck','trade','teamfight','overextended','no respect for kill potential','defending core','attacking core','ganked/map awareness','died trying to save someone','bad/greedy rotation','B-ing greedy')
-Aggregate_Deaths_Pie_DF <- c()
-Aggregate_Deaths_By_Time_DF <- rep(0,24)
+Aggregate_Length_DF <- c(); Aggregate_Ten_DF <- c(); Aggregate_Diff_DF <- c()
+Aggregate_Kills_DF <- c(); Aggregate_Assists_DF <- c(); Aggregate_Deaths_DF <- c()
+Aggregate_KillsPM_DF <- c(); Aggregate_AssistsPM_DF <- c(); Aggregate_DeathsPM_DF <- c()
+Aggregate_Siege_DF <- c(); Aggregate_Hero_DF <- c(); Aggregate_Healing_DF <- c(); Aggregate_XP_DF <- c()
+Aggregate_SiegePM_DF <- c(); Aggregate_HeroPM_DF <- c(); Aggregate_HealingPM_DF <- c(); Aggregate_XPPM_DF <- c()
+Aggregate_Deaths_Pie_DF <- c(); Aggregate_Deaths_By_Time_DF <- rep(0,24)
 
 for(name in supports){ #for loop over all supports
 file <- sprintf("~/GitHub/SupportPie/SupportPie - %s.csv",name)
 DFA <- read_csv(file)
 DF <- DFA[2:nrow(DFA),] #removing the avg I have on the 1st row
 
-#General Hero Analysis !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+#General Hero Analysis !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #Times
 lowerBoundX <- min(min(DF$LengthS),min(DF$TenS),min(DF$DiffS))
 upperBoundX <- max(max(DF$LengthS),max(DF$TenS),max(DF$DiffS))
@@ -142,8 +146,8 @@ for(i in death_start:nrow(DF)){
 title = sprintf('%s Deaths by the Hour n=%d',name,sum(Deaths_By_Time_DF))
 plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
 
-# Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+# Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if(name=='Alexstrasza'){
   ult_names_indicator <- c(T,T)
   ult_names <- c('CleansingFlame','CleansingFlameSuccess','CleansingFlamePercent','Ult1PM','LifeBinder','LifeBinderSuccess','LifeBinderPercent','Ult2PM')
@@ -306,16 +310,41 @@ if(actives_indicator[2]){
 }
 legend("topleft",inset=.05,c(label5,label6), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
 
+
 # Aggregate Stats !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Aggregate_Length_DF <- c(Aggregate_Length_DF,DF$LengthS)
+Aggregate_Ten_DF <- c(Aggregate_Ten_DF,DF$TenS)
+Aggregate_Diff_DF <- c(Aggregate_Diff_DF,DF$DiffS)
+Aggregate_Kills_DF <- c(Aggregate_Kills_DF,DF$Kills)
+Aggregate_Assists_DF <- c(Aggregate_Assists_DF,DF$Assists)
+Aggregate_Deaths_DF <- c(Aggregate_Deaths_DF,DF$Deaths)
+Aggregate_KillsPM_DF <- c(Aggregate_KillsPM_DF,DF$KillsPM)
+Aggregate_AssistsPM_DF <- c(Aggregate_AssistsPM_DF,DF$AssistsPM)
+Aggregate_DeathsPM_DF <- c(Aggregate_DeathsPM_DF,DF$DeathsPM)
+Aggregate_Siege_DF <- c(Aggregate_Siege_DF,DF$Siege)
+Aggregate_Hero_DF <- c(Aggregate_Hero_DF,DF$Hero)
+Aggregate_Healing_DF <- c(Aggregate_Healing_DF,DF$Healing)
+Aggregate_XP_DF <- c(Aggregate_XP_DF,DF$XP)
+Aggregate_SiegePM_DF <- c(Aggregate_SiegePM_DF,DF$SiegePM)
+Aggregate_HeroPM_DF <- c(Aggregate_HeroPM_DF,DF$HeroPM)
+Aggregate_HealingPM_DF <- c(Aggregate_HealingPM_DF,DF$HealingPM)
+Aggregate_XPPM_DF <- c(Aggregate_XPPM_DF,DF$XPPM)
 Aggregate_Deaths_Pie_DF <- c(Aggregate_Deaths_Pie_DF,Deaths_Pie_DF)
 Aggregate_Deaths_By_Time_DF <- Aggregate_Deaths_By_Time_DF + Deaths_By_Time_DF
-
-
-
 } #giant for-looping over all support characters
 
-
-
+#Aggregate Times Chart
+lowerBoundX <- min(min(Aggregate_Ten_DF),min(Aggregate_Diff_DF))
+upperBoundX <- max(Aggregate_Length_DF)
+upperBoundY <- length(Aggregate_Length_DF)*.35
+title <- sprintf('Aggregate Support Times n=%d',length(Aggregate_Length_DF))
+hist(Aggregate_Length_DF, col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='seconds',las=1)
+hist(Aggregate_Ten_DF, col=rgb(0,1,0,1/4), add=T)
+hist(Aggregate_Diff_DF, col=rgb(0,0,1,1/4), add=T)
+abline(v=mean(Aggregate_Length_DF),col='red',lw=1)
+abline(v=mean(Aggregate_Ten_DF),col='green',lw=1)
+abline(v=mean(Aggregate_Diff_DF),col='blue',lw=1)
+legend("topright",inset=.05,c('Game Length','10 Reached','Difference'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
 
 #Aggregate Death Pie Chart
 title = sprintf('Aggregate Suppport Deaths n=%d',length(Aggregate_Deaths_Pie_DF))
