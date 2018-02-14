@@ -2,12 +2,11 @@
 #cat("\014") #clears console || ctrl+L also works 
 #getwd()
 #setwd()
-
 library(readr)
 
 #Constants
-supports <- c('Alexstrasza','Lucio','Malfurion','Rehgar') #fix uther (need to add tanked category) and stukov (needs the hotD game)
-#supports <- 'Alexstrasza'
+supports <- c('Alexstrasza','Lucio','Malfurion','Rehgar','Stukov','Uther') #fix uther (need to add tanked category)
+#supports <- 'Uther'
 breaksN <- 15
 lab <- c('too aggro','positioning','missed a defnesive CD','facecheck','trade','teamfight','overextended','no respect for kill potential','defending core','attacking core','ganked/map awareness','died trying to save someone','bad/greedy rotation','B-ing greedy')
 Aggregate_Deaths_Pie_DF <- c()
@@ -82,7 +81,16 @@ abline(v=mean(DF$Siege),col='red',lw=3)
 abline(v=mean(DF$Hero),col='green',lw=3)
 abline(v=mean(DF$Healing),col='blue',lw=3)
 abline(v=mean(DF$XP),col='yellow',lw=3)
-legend("topright",inset=.05,c('Siege Damage','Hero Damage','Healing/Shielding','XP Contribution'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2),rgb(1,1,0,1/2)))
+legend_text <- c('Siege Damage','Hero Damage','Healing/Shielding','XP Contribution')
+colors <- c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2),rgb(1,1,0,1/2))
+if(name=='Uther'){
+  legend_text <- c(legend_text,'Damage Tanked')
+  colors <- c(colors,rgb(1/2,0,1/2,1/2))
+  Tanked_DF <- hist(DF$Tanked,breaks=breaksN,plot=F)
+  plot(Tanked_DF,col=rgb(1/2,0,1/2,1/2),add=T)
+  abline(v=mean(DF$Tanked),col='purple',lw=3)
+}
+legend("topright",inset=.05,legend_text, fill=colors)
 
 lowerBoundX <- min(min(DF$SiegePM),min(DF$HeroPM),min(DF$HealingPM),min(DF$XPPM))
 upperBoundX <- max(max(DF$SiegePM),max(DF$HeroPM),max(DF$HealingPM),max(DF$XPPM))
@@ -100,7 +108,14 @@ abline(v=mean(DF$SiegePM),col='red',lw=3)
 abline(v=mean(DF$HeroPM),col='green',lw=3)
 abline(v=mean(DF$HealingPM),col='blue',lw=3)
 abline(v=mean(DF$XPPM),col='yellow',lw=3)
-legend("topright",inset=.05,c('Siege Per Minute','Hero Per Minute','Healing Per Minute','XP Per Minute'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2),rgb(1,1,0,1/2)))
+if(name=='Uther'){
+  legend_text <- c(legend_text,'Tanked Per Minute')
+  colors <- c(colors,rgb(1/2,0,1/2,1/2))
+  TankedPM_DF <- hist(DF$Tanked,breaks=breaksN,plot=F)
+  plot(TankedPM_DF,col=rgb(1/2,0,1/2,1/2),add=T)
+  abline(v=mean(DF$Tanked),col='purple',lw=3)
+}
+legend("topright",inset=.05,legend_text, fill=colors)
 
 #Death Pie Chart
 Deaths_Pie_DF <- c(DF$D1,DF$D2,DF$D3,DF$D4,DF$D5,DF$D6,DF$D7,DF$D8)
