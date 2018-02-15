@@ -22,7 +22,7 @@ DFA <- read_csv(file)
 DF <- DFA[2:nrow(DFA),] #removing the avg I have on the 1st row
 
 
-#General Hero Analysis !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#General Hero Analysis !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #Times
 lowerBoundX <- min(min(DF$LengthS),min(DF$TenS),min(DF$DiffS))
 upperBoundX <- max(max(DF$LengthS),max(DF$TenS),max(DF$DiffS))
@@ -40,12 +40,13 @@ abline(v=mean(DF$DiffS),col='blue',lw=1)
 legend("topright",inset=.05,c('Game Length','10 Reached','Difference'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
 
 #KDA
+upperBoundX <- max(DF$Assists)
 upperBoundY <- length(DF$Kills)*.8
 Kills_DF <- hist(DF$Kills,plot=F)
 Assists_DF <- hist(DF$Assists,plot=F)
 Deaths_DF <- hist(DF$Deaths,plot=F)
 title <- sprintf('%s KDA n=%d',name,length(DF$Kills))
-plot(Kills_DF, col=rgb(1,0,0,1/4), xlim=c(0,max(DF$Assists)),ylim=c(0,upperBoundY),main=title,xlab='value',las=1) # #assists > #deaths/#kills 
+plot(Kills_DF, col=rgb(1,0,0,1/4), xlim=c(0,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='value',las=1) # #assists > #deaths/#kills 
 plot(Assists_DF, col=rgb(0,1,0,1/4), add=T)
 plot(Deaths_DF, col=rgb(0,0,1,1/4), add=T)
 abline(v=mean(DF$Kills),col='red',lw=3)
@@ -147,7 +148,7 @@ title = sprintf('%s Deaths by the Hour n=%d',name,sum(Deaths_By_Time_DF))
 plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
 
 
-# Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if(name=='Alexstrasza'){
   ult_names_indicator <- c(T,T)
   ult_names <- c('CleansingFlame','CleansingFlameSuccess','CleansingFlamePercent','Ult1PM','LifeBinder','LifeBinderSuccess','LifeBinderPercent','Ult2PM')
@@ -311,7 +312,7 @@ if(actives_indicator[2]){
 legend("topleft",inset=.05,c(label5,label6), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
 
 
-# Aggregate Stats !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Aggregate Stats !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Aggregate_Length_DF <- c(Aggregate_Length_DF,DF$LengthS)
 Aggregate_Ten_DF <- c(Aggregate_Ten_DF,DF$TenS)
 Aggregate_Diff_DF <- c(Aggregate_Diff_DF,DF$DiffS)
@@ -333,18 +334,73 @@ Aggregate_Deaths_Pie_DF <- c(Aggregate_Deaths_Pie_DF,Deaths_Pie_DF)
 Aggregate_Deaths_By_Time_DF <- Aggregate_Deaths_By_Time_DF + Deaths_By_Time_DF
 } #giant for-looping over all support characters
 
-#Aggregate Times Chart
+#Aggregate Times
 lowerBoundX <- min(min(Aggregate_Ten_DF),min(Aggregate_Diff_DF))
 upperBoundX <- max(Aggregate_Length_DF)
-upperBoundY <- length(Aggregate_Length_DF)*.35
+upperBoundY <- length(Aggregate_Length_DF)*.3
 title <- sprintf('Aggregate Support Times n=%d',length(Aggregate_Length_DF))
-hist(Aggregate_Length_DF, col=rgb(1,0,0,1/4),xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='seconds',las=1)
-hist(Aggregate_Ten_DF, col=rgb(0,1,0,1/4), add=T)
-hist(Aggregate_Diff_DF, col=rgb(0,0,1,1/4), add=T)
+hist(Aggregate_Length_DF, col=rgb(1,0,0,1/4),breaks=breaksN,xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='seconds',las=1)
+hist(Aggregate_Ten_DF, col=rgb(0,1,0,1/4),breaks=breaksN, add=T)
+hist(Aggregate_Diff_DF, col=rgb(0,0,1,1/4),breaks=breaksN, add=T)
 abline(v=mean(Aggregate_Length_DF),col='red',lw=1)
 abline(v=mean(Aggregate_Ten_DF),col='green',lw=1)
 abline(v=mean(Aggregate_Diff_DF),col='blue',lw=1)
 legend("topright",inset=.05,c('Game Length','10 Reached','Difference'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
+
+#Aggregate KDA
+upperBoundX <- max(Aggregate_Assists_DF)
+upperBoundY <- length(Aggregate_Kills_DF)*.4
+title <- sprintf('Aggregate Support KDA n=%d',length(Aggregate_Kills_DF))
+hist(Aggregate_Kills_DF,col=rgb(1,0,0,1/4),breaks=breaksN,xlim=c(0,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='value',las=1) # #assists > #deaths/#kills 
+hist(Aggregate_Assists_DF, col=rgb(0,1,0,1/4),breaks=breaksN, add=T)
+hist(Aggregate_Deaths_DF, col=rgb(0,0,1,1/4),breaks=breaksN, add=T)
+abline(v=mean(Aggregate_Kills_DF),col='red',lw=3)
+abline(v=mean(Aggregate_Assists_DF),col='green',lw=3)
+abline(v=mean(Aggregate_Deaths_DF),col='blue',lw=3)
+legend("topright",inset=.05,c('Kills','Assists','Deaths'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
+
+lowerBoundX <- min(min(Aggregate_KillsPM_DF),min(Aggregate_AssistsPM_DF),min(Aggregate_DeathsPM_DF))
+upperBoundX <- max(max(Aggregate_KillsPM_DF),max(Aggregate_AssistsPM_DF),max(Aggregate_DeathsPM_DF))
+upperBoundY <- length(Aggregate_KillsPM_DF)*.4
+title <- sprintf('Aggregate Support KDA Per Min n=%d',length(Aggregate_KillsPM_DF))
+hist(Aggregate_KillsPM_DF,col=rgb(1,0,0,1/4),breaks=breaksN,xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='per min',las=1)
+hist(Aggregate_AssistsPM_DF,col=rgb(0,1,0,1/4),breaks=breaksN,add=T)
+hist(Aggregate_DeathsPM_DF,col=rgb(0,0,1,1/4),breaks=breaksN,add=T)
+abline(v=mean(Aggregate_KillsPM_DF),col='red',lw=3)
+abline(v=mean(Aggregate_AssistsPM_DF),col='green',lw=3)
+abline(v=mean(Aggregate_DeathsPM_DF),col='blue',lw=3)
+legend("topright",inset=.05,c('Kills Per Minute','Assists Per minute','Deaths Per Minute'), fill=c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2)))
+
+#Aggregate Stats
+lowerBoundX <- min(min(Aggregate_Siege_DF),min(Aggregate_Hero_DF),min(Aggregate_Healing_DF),min(Aggregate_XP_DF))
+upperBoundX <- max(max(Aggregate_Siege_DF),max(Aggregate_Hero_DF),max(Aggregate_Healing_DF),max(Aggregate_XP_DF))
+upperBoundY <- length(Aggregate_Siege_DF)*.4
+title <- sprintf('Aggregate Support Stats n=%d',length(Aggregate_Siege_DF))
+hist(Aggregate_Siege_DF, col=rgb(1,0,0,1/4),breaks=breaksN,xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='value',las=1)
+hist(Aggregate_Hero_DF, col=rgb(0,1,0,1/4),breaks=breaksN,add=T)
+hist(Aggregate_Healing_DF, col=rgb(0,0,1,1/4),breaks=breaksN,add=T)
+hist(Aggregate_XP_DF, col=rgb(1,1,0,1/4),breaks=breaksN,add=T)
+abline(v=mean(Aggregate_Siege_DF),col='red',lw=3)
+abline(v=mean(Aggregate_Hero_DF),col='green',lw=3)
+abline(v=mean(Aggregate_Healing_DF),col='blue',lw=3)
+abline(v=mean(Aggregate_XP_DF),col='yellow',lw=3)
+legend_text <- c('Siege Damage','Hero Damage','Healing/Shielding','XP Contribution')
+colors <- c(rgb(1,0,0,1/2),rgb(0,1,0,1/2),rgb(0,0,1,1/2),rgb(1,1,0,1/2))
+legend("topright",inset=.05,legend_text, fill=colors)
+
+lowerBoundX <- min(min(Aggregate_SiegePM_DF),min(Aggregate_HeroPM_DF),min(Aggregate_HealingPM_DF),min(Aggregate_XPPM_DF))
+upperBoundX <- max(max(Aggregate_SiegePM_DF),max(Aggregate_HeroPM_DF),max(Aggregate_HealingPM_DF),max(Aggregate_XPPM_DF))
+upperBoundY <- length(Aggregate_SiegePM_DF)*.4
+title <- sprintf('Aggregate Support Stats Per Min n=%d',length(Aggregate_SiegePM_DF))
+hist(Aggregate_SiegePM_DF, col=rgb(1,0,0,1/4),breaks=breaksN,xlim=c(lowerBoundX,upperBoundX),ylim=c(0,upperBoundY),main=title,xlab='value',las=1)
+hist(Aggregate_HeroPM_DF, col=rgb(0,1,0,1/4),breaks=breaksN,add=T)
+hist(Aggregate_HealingPM_DF, col=rgb(0,0,1,1/4),breaks=breaksN,add=T)
+hist(Aggregate_XPPM_DF, col=rgb(1,1,0,1/4),breaks=breaksN,add=T)
+abline(v=mean(Aggregate_SiegePM_DF),col='red',lw=3)
+abline(v=mean(Aggregate_HeroPM_DF),col='green',lw=3)
+abline(v=mean(Aggregate_HealingPM_DF),col='blue',lw=3)
+abline(v=mean(Aggregate_XPPM_DF),col='yellow',lw=3)
+legend("topright",inset=.05,legend_text, fill=colors)
 
 #Aggregate Death Pie Chart
 title = sprintf('Aggregate Suppport Deaths n=%d',length(Aggregate_Deaths_Pie_DF))
