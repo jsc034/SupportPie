@@ -18,4 +18,7 @@ D1,...,D8
 11: ganked/map awareness		
 12: died trying to save someone		
 13: bad/greedy/unsafe rotation		
-14: B-ing greedily		
+14: B-ing greedily
+15: camp invade gone wrong
+16: chasing/tunnel vision for a kill
+17: bad tower dive
