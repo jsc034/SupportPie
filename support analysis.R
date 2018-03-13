@@ -167,7 +167,7 @@ plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=1
 
 # Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if(name=='Alexstrasza'){
-  ult_names_indicator <- c(T,T)
+  ult_names_indicator <- c(T,F)
   ult_names <- c('CleansingFlame','CleansingFlameSuccess','CleansingFlamePercent','Ult1PM','LifeBinder','LifeBinderSuccess','LifeBinderPercent','Ult2PM')
   actives_indicator <- c(T,T,F)
   actives <- c('Dragonqueen','DragonqueenSuccess','DragonqueenPercent','Pacify','PacifySuccess','PacifyPercent','g','h','i')
@@ -184,13 +184,14 @@ if(name=='Alexstrasza'){
 }else if(name=='Malfurion'){
   ult_names_indicator <- c(T,F)
   ult_names <- c('Dream','DreamSuccess','DreamPercent','Ult1PM','Tranquility','TranquilitySuccess','TranquilityPercent','Ult2PM')
-  actives_indicator <- c(T,F,F)
-  actives <- c('IceBlock','IceBlockSuccess','IceBlockPercent','Cleanse','CleanseSuccess','CleansePercent','g','h','i')
+  actives_indicator <- c(T,T,T)
+  actives <- c('IceBlock','IceBlockSuccess','IceBlockPercent','Cleanse','CleanseSuccess','CleansePercent','Blink','BlinkPercent','BlinkSuccess')
   colorU1 <- color_dream1; colorU2 <- color_dream2
   colorA1 <- color_IB1; colorA2 <- color_IB2
   colorA3 <- color_cleanse1; colorA4 <- color_cleanse2
+  colorA5 <- color_dream1; colorA6 <- color_dream2
 }else if(name=='Rehgar'){
-  ult_names_indicator <- c(T,T)
+  ult_names_indicator <- c(T,F)
   ult_names <- c('Ancestral','AncestralSuccess','AncestralPercent','Ult1PM','Bloodlust','BloodlustSuccess','BloodlustPercent','Ult2PM')
   actives_indicator <- c(T,F,F)
   actives <- c('Cleanse','CleanseSuccess','CleansePercent','d','e','f','g','h','i')
@@ -281,7 +282,6 @@ if(ult_names_indicator[2]){
 }
 
 if(actives_indicator[1]){
-  #Active 1
   Actives_Cleaned_1 <- DF[[actives[1]]]
   Actives_Cleaned_1 <- Actives_Cleaned_1[ !is.na( Actives_Cleaned_1 ) ]
   ActivesSuccess_Cleaned_1 <- DF[[actives[2]]]
@@ -304,7 +304,6 @@ if(actives_indicator[1]){
   
 }
 if(actives_indicator[2]){
-  #Active 2
   Actives_Cleaned_2 <- DF[[actives[4]]]
   Actives_Cleaned_2 <- Actives_Cleaned_2[ !is.na( Actives_Cleaned_2 ) ]
   ActivesSuccess_Cleaned_2 <- DF[[actives[5]]]
@@ -326,7 +325,29 @@ if(actives_indicator[2]){
   ActivePercent_DF_2 <- hist(ActivesPercent_Cleaned_2,breaks=breaksN,plot=F)
   
 }
-#legend("topleft",inset=.05,c(label5,label6), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2))) #no 3rd active yet
+if(actives_indicator[3]){ ###############################fix this
+  Actives_Cleaned_3 <- DF[[actives[7]]]
+  Actives_Cleaned_3 <- Actives_Cleaned_3[ !is.na( Actives_Cleaned_3 ) ]
+  ActivesSuccess_Cleaned_3 <- DF[[actives[8]]]
+  ActivesSuccess_Cleaned_3 <- ActivesSuccess_Cleaned_3[ !is.na( ActivesSuccess_Cleaned_3 ) ]
+  upperBoundY <- length(Actives_Cleaned_3)
+  Active_DF_3 <- hist(Actives_Cleaned_3,plot=F)
+  ActiveSuccess_DF_3 <- hist(ActivesSuccess_Cleaned_3,plot=F)
+  title <- sprintf('%s %s n=%d',name,actives[7],length(Actives_Cleaned_3))
+  plot(Active_DF_3,col=colorA5,xlim=c(0,max(Actives_Cleaned_3)),ylim=c(0,upperBoundY),main=title,xlab='counts',las=1)
+  plot(ActiveSuccess_DF_3,col=colorA6,add=T)
+  abline(v=mean(Actives_Cleaned_3),col=colorA5,lw=3)
+  abline(v=mean(ActivesSuccess_Cleaned_3),col=colorA6,lw=3)
+  label1 <- sprintf('%s Casted',actives[7])
+  label2 <- sprintf('%s Successful',actives[7])
+  legend("topright",inset=.05,c(label1,label2),fill=c(colorA5,colorA6))
+  
+  ActivesPercent_Cleaned_3 <- DF[[actives[9]]]
+  ActivesPercent_Cleaned_3 <- ActivesPercent_Cleaned_3[ !is.na( ActivesPercent_Cleaned_3 ) ]
+  ActivePercent_DF_3 <- hist(ActivesPercent_Cleaned_3,breaks=breaksN,plot=F)
+  
+}
+#legend("topleft",inset=.05,c(label5,label6), fill=c(rgb(0,0,1,1/2),rgb(1,0,0,1/2)))
 
 
 # Aggregate Stats !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
