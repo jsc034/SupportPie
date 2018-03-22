@@ -15,6 +15,7 @@ Aggregate_KillsPM_DF <- c(); Aggregate_AssistsPM_DF <- c(); Aggregate_DeathsPM_D
 Aggregate_Siege_DF <- c(); Aggregate_Hero_DF <- c(); Aggregate_Healing_DF <- c(); Aggregate_XP_DF <- c()
 Aggregate_SiegePM_DF <- c(); Aggregate_HeroPM_DF <- c(); Aggregate_HealingPM_DF <- c(); Aggregate_XPPM_DF <- c()
 Aggregate_Deaths_Pie_DF <- c(); Aggregate_Deaths_By_Time_DF <- rep(0,24)
+Aggregate_Games_By_Time_DF <- rep(0,24)
 #colors
 MAX=255; TRANSP=MAX/2 #1st (lighter) color is total number, 2nd (darker) color is success
 ####   color_1 <- rgb(,TRANSP,maxColorValue=MAX); color_2 <- rgb(,TRANSP,maxColorValue=MAX)
@@ -164,6 +165,16 @@ for(i in death_start:nrow(DF)){
 title = sprintf('%s Deaths by the Hour n=%d',name,sum(Deaths_By_Time_DF))
 plot(0:23,Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
 
+#Games by time played
+Games_By_Time_DF <- rep(0,24)
+Time_DF <- DF$Time[!is.na(DF$Time)]
+for(i in Time_DF){
+  if(i!=0){ Games_By_Time_DF[i] = Games_By_Time_DF[i] + 1 }
+  else{ Games_By_Time_DF[24] = Games_By_Time_DF[24] + 1 } #stores the 0th hour as 24th hour
+}
+Games_By_Time_DF = c(Games_By_Time_DF[24],Games_By_Time_DF[-24]) #rearranges so the 0th hour at front
+#title = sprintf('%s Games by the Hour n=%d',name,sum(Games_By_Time_DF))
+#plot(0:23,Games_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Games',pch=16,type='o',las=1)
 
 # Hero Specific !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if(name=='Alexstrasza'){
@@ -370,6 +381,8 @@ Aggregate_HealingPM_DF <- c(Aggregate_HealingPM_DF,DF$HealingPM)
 Aggregate_XPPM_DF <- c(Aggregate_XPPM_DF,DF$XPPM)
 Aggregate_Deaths_Pie_DF <- c(Aggregate_Deaths_Pie_DF,Deaths_Pie_DF)
 Aggregate_Deaths_By_Time_DF <- Aggregate_Deaths_By_Time_DF + Deaths_By_Time_DF
+Aggregate_Games_By_Time_DF <- Aggregate_Games_By_Time_DF + Games_By_Time_DF
+
 } #giant for-looping over all support characters
 
 #Aggregate Times
@@ -447,6 +460,10 @@ pie(table(Aggregate_Deaths_Pie_DF),labels=lab,main=title) ######################
 #Aggregate Deaths by time played
 title = sprintf('Aggregate Deaths by the Hour n=%d',sum(Aggregate_Deaths_By_Time_DF))
 plot(0:23,Aggregate_Deaths_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Deaths',pch=16,type='o',las=1)
+
+#Aggregate Games by time played
+title = sprintf('Aggregate Games by the Hour n=%d',sum(Aggregate_Games_By_Time_DF))
+plot(0:23,Aggregate_Games_By_Time_DF,main=title,xlab='Real Time Hour',ylab='Games',pch=16,type='o',las=1)
 
 
 #rbind(0:23,Deaths_By_Time_DF)
