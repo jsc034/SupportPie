@@ -1,0 +1,4 @@
+Patch,Type,Map,Win,Length,LengthS,Ten,TenS,Diff,DiffS,Ult1PM,Stay,StaySuccess,StayPercent,Ult2PM,Lore,LoreSuccess,LorePercent,AB,ABSuccess,ABPercent,Kills,Assists,Deaths,KillsPM,AssistsPM,DeathsPM,Siege,Hero,Healing,XP,SiegePM,HeroPM,HealingPM,XPPM,Time,D1,D2,D3,D4,D5,D6,D7,D8
+,,,0.500,18:36,"1,116",06:50,410,11:46,706,0.56,6.00,1.00,0.17,0.55,7.00,4.00,0.57,3.00,0.00,0.00,0.50,9.50,2.00,0.03,0.52,0.11,"16,713","8,748","57,623","7,097",903,479,"3,103",382,10.50,,,,,,,,
+2.40.0,1,Cursed Hollow,1,17:25,"1,045",06:37,397,10:48,648,0.56,6,1,0.17,,,,,3,0,0.00,1,13,3,0.06,0.75,0.17,16748,10557,55096,6873,962,606,3163,395,11,12,1,7,,,,,
+2.40.1,,Blackheart's Bay,0,19:46,"1,186",07:03,423,12:43,763,,,,,0.55,7,4,0.57,,,,0,6,1,0.00,0.30,0.05,16677,6939,60150,7320,844,351,3043,370,10,12,,,,,,,

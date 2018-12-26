@@ -5,8 +5,8 @@
 library(readr)
 
 #Constants
-supports <- c('Alexstrasza','Lucio','Malfurion','Rehgar','Stukov','Uther')
-#supports <- 'Alexstrasza'
+#supports <- 'Ana'
+supports <- c('Alexstrasza','Ana','Deckard','Lucio','Malfurion','Rehgar','Stukov','Tyrande','Uther')
 breaksN <- 15
 lab <- c('too aggro','positioning','missed a defnesive CD','facecheck','trade','teamfight','overextended','no respect for kill potential','defending core','attacking core','ganked/map awareness','died trying to save someone','bad rotation','B-ing greedy','bad camp invade','chasing/tunnel vision for a kill','bad tower dive')
 Aggregate_Length_DF <- c(); Aggregate_Ten_DF <- c(); Aggregate_Diff_DF <- c()
@@ -21,29 +21,37 @@ MAX=255; TRANSP=MAX/2 #1st (lighter) color is total number, 2nd (darker) color i
 ####   color_1 <- rgb(,TRANSP,maxColorValue=MAX); color_2 <- rgb(,TRANSP,maxColorValue=MAX)
 color_cleansing1 <- rgb(216,229,49,TRANSP,maxColorValue=MAX); color_cleansing2 <- rgb(254,102,41,TRANSP,maxColorValue=MAX)
 color_LB1 <- rgb(111,234,86,TRANSP,maxColorValue=MAX); color_LB2 <- rgb(8,124,88,TRANSP,maxColorValue=MAX)
+color_nano1 <- rgb(16,182,152,TRANSP,maxColorValue=MAX); color_nano2 <- rgb(8,52,166,TRANSP,maxColorValue=MAX)
+color_horus1 <- rgb(132,234,250,TRANSP,maxColorValue=MAX); color_horus2 <- rgb(45,93,164,TRANSP,maxColorValue=MAX)
 color_SB1 <- rgb(119,190,40,TRANSP,maxColorValue=MAX); color_SB2 <- rgb(48,65,29,TRANSP,maxColorValue=MAX)
 color_dream1 <- rgb(90,203,247,TRANSP,maxColorValue=MAX); color_dream2 <- rgb(33,16,103,TRANSP,maxColorValue=MAX)
 color_ancestral1 <- rgb(24,202,88,TRANSP,maxColorValue=MAX); color_ancestral2 <- rgb(51,59,13,TRANSP,maxColorValue=MAX)
 color_BL1 <- rgb(238,202,70,TRANSP,maxColorValue=MAX); color_BL2 <- rgb(177,35,9,TRANSP,maxColorValue=MAX)
 color_swipe1 <- rgb(67,231,59,TRANSP,maxColorValue=MAX); color_swipe2 <- rgb(8,125,88,TRANSP,maxColorValue=MAX)
 color_Dshield1 <- rgb(253,179,36,TRANSP,maxColorValue=MAX); color_Dshield2 <- rgb(251,90,16,TRANSP,maxColorValue=MAX)
+color_Dstorm1 <- rgb(224,95,17,TRANSP,maxColorValue=MAX); color_Dstorm2 <- rgb(124,45,9,TRANSP,maxColorValue=MAX)
+color_stay1 <- rgb(248,171,70,TRANSP,maxColorValue=MAX); color_stay2 <- rgb(163,61,43,TRANSP,maxColorValue=MAX)
+color_lore1 <- rgb(240,175,108,TRANSP,maxColorValue=MAX); color_lore2 <- rgb(190,96,67,TRANSP,maxColorValue=MAX)
+color_shadow1 <- rgb(9,223,218,TRANSP,maxColorValue=MAX); color_shadow2 <- rgb(10,115,117,TRANSP,maxColorValue=MAX)
+color_starfall1 <- rgb(139,69,252,TRANSP,maxColorValue=MAX); color_starfall2 <- rgb(19,34,234,TRANSP,maxColorValue=MAX)
 
 color_DQ1 <- rgb(0,88,19,TRANSP,maxColorValue=MAX); color_DQ2 <- rgb(227,49,73,TRANSP,maxColorValue=MAX)
 color_pacify1 <- rgb(232,165,93,TRANSP,maxColorValue=MAX); color_pacify2 <- rgb(129,29,72,TRANSP,maxColorValue=MAX)
 color_IB1 <- rgb(129,213,233,TRANSP,maxColorValue=MAX); color_IB2 <- rgb(26,69,122,TRANSP,maxColorValue=MAX)
 color_cleanse1 <- rgb(228,219,53,TRANSP,maxColorValue=MAX); color_cleanse2 <- rgb(172,137,24,TRANSP,maxColorValue=MAX)
-
+color_VR1 <- rgb(222,205,101,TRANSP,maxColorValue=MAX); color_VR2 <- rgb(194,100,8,TRANSP,maxColorValue=MAX)
+color_AB1 <- rgb(228,200,60,TRANSP,maxColorValue=MAX); color_AB2 <- rgb(130,86,38,TRANSP,maxColorValue=MAX)
 
 for(name in supports){ #for loop over all supports
 file <- sprintf("~/GitHub/SupportPie/SupportPie - %s.csv",name)
-DFA <- read_csv(file)
+DFA <- read_csv(file,col_types=cols(Length=col_time(format="%M:%S"),Ten=col_time(format="%M:%S"),Diff=col_time(format="%M:%S")) ) #formatting length,ten,diff to min/sec
 DF <- DFA[2:nrow(DFA),] #removing the avg I have on the 1st row
 
 
 #General Hero Analysis !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #Times
-lowerBoundX <- min(min(DF$LengthS),min(DF$TenS),min(DF$DiffS))
-upperBoundX <- max(max(DF$LengthS),max(DF$TenS),max(DF$DiffS))
+lowerBoundX <- min(min(DF$LengthS),min(DF$TenS,na.rm=T),min(DF$DiffS,na.rm=T)) #omit any NAs from games ending before 10
+upperBoundX <- max(DF$LengthS)
 upperBoundY <- length(DF$DiffS)*.5
 Length_DF <- hist(DF$LengthS,breaks=breaksN,plot=F)
 Ten_DF <- hist(DF$TenS,breaks=breaksN,plot=F)
@@ -186,6 +194,21 @@ if(name=='Alexstrasza'){
   colorU3 <- color_LB1; colorU4 <- color_LB2
   colorA1 <- color_DQ1; colorA2 <- color_DQ2
   colorA3 <- color_pacify1; colorA4 <- color_pacify2
+}else if(name=='Ana'){
+  ult_names_indicator <- c(T,T)
+  ult_names <- c('NanoBoost','NanoBoostSuccess','NanoBoostPercent','Ult1PM','Horus','HorusSuccess','HorusPercent','Ult2PM')
+  actives_indicator <- c(F,F,F)
+  actives <- c('a','b','c','d','e','f','g','h','i')
+  colorU1 <- color_nano1; colorU2 <- color_nano2
+  colorU3 <- color_horus1; colorU4 <- color_horus2
+}else if(name=='Deckard'){
+  ult_names_indicator <- c(T,T)
+  ult_names <- c('Stay','StaySuccess','StayPercent','Ult1PM','Lore','LoreSuccess','LorePercent','Ult2PM')
+  actives_indicator <- c(T,F,F)
+  actives <- c('AB','ABSuccess','ABPercent','d','e','f','g','h','i')
+  colorU1 <- color_stay1; colorU2 <- color_stay2
+  colorU3 <- color_lore1; colorU4 <- color_lore2
+  colorA1 <- color_AB1; colorA2 <- color_AB2
 }else if(name=='Lucio'){
   ult_names_indicator <- c(T,F)
   ult_names <- c('SoundBarrier','SoundBarrierSuccess','SoundBarrierPercent','Ult1PM','ReverseAmp','ReverseAmpSuccess','ReverseAmpPercent','Ult2PM')
@@ -202,7 +225,7 @@ if(name=='Alexstrasza'){
   colorA3 <- color_cleanse1; colorA4 <- color_cleanse2
   colorA5 <- color_dream1; colorA6 <- color_dream2
 }else if(name=='Rehgar'){
-  ult_names_indicator <- c(T,F)
+  ult_names_indicator <- c(T,T)
   ult_names <- c('Ancestral','AncestralSuccess','AncestralPercent','Ult1PM','Bloodlust','BloodlustSuccess','BloodlustPercent','Ult2PM')
   actives_indicator <- c(T,F,F)
   actives <- c('Cleanse','CleanseSuccess','CleansePercent','d','e','f','g','h','i')
@@ -212,9 +235,16 @@ if(name=='Alexstrasza'){
 }else if(name=='Stukov'){
   ult_names_indicator <- c(T,F)
   ult_names <- c('Swipe','SwipeSuccess','SwipePercent','Ult1PM','Shove','ShoveSuccess','ShovePercent','Ult2PM')
+  actives_indicator <- c(T,F,F)
+  actives <- c('Virulent','VirulentSuccess','VirulentPercent','d','e','f','g','h','i')
+  colorU1 <- color_swipe1; colorU2 <- color_swipe2
+  colorA1 <- color_VR1; colorA2 <- color_VR2
+}else if(name=='Tyrande'){
+  ult_names_indicator <- c(T,F)
+  ult_names <- c('Shadow','ShadowSuccess','ShadowPercent','Ult1PM','e','f','g','Ult2PM')
   actives_indicator <- c(F,F,F)
   actives <- c('a','b','c','d','e','f','g','h','i')
-  colorU1 <- color_swipe1; colorU2 <- color_swipe2
+  colorU1 <- color_shadow1; colorU2 <- color_shadow2
 }else if(name=='Uther'){
   ult_names_indicator <- c(T,F)
   ult_names <- c('DShield','DShieldSuccess','DShieldPercent','Ult1PM','DStorm','DStormSuccess','DStormPercent','Ult2PM')
@@ -386,7 +416,7 @@ Aggregate_Games_By_Time_DF <- Aggregate_Games_By_Time_DF + Games_By_Time_DF
 } #giant for-looping over all support characters
 
 #Aggregate Times
-lowerBoundX <- min(min(Aggregate_Ten_DF),min(Aggregate_Diff_DF))
+lowerBoundX <- min(min(Aggregate_Length_DF),min(Aggregate_Ten_DF,na.rm=T),min(Aggregate_Diff_DF,na.rm=T)) #omit any NAs from games ending before 10
 upperBoundX <- max(Aggregate_Length_DF)
 upperBoundY <- length(Aggregate_Length_DF)*.3
 title <- sprintf('Aggregate Support Times n=%d',length(Aggregate_Length_DF))

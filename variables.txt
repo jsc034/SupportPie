@@ -1,8 +1,8 @@
 Type		
-0: QM/UR		
-1: Ranked (HL/TL)		
-2: Custom/Scrim		
-3: Tournament		
+NA: QM/UR
+1: Ranked (HL/TL)	cicle	
+2: Custom/Scrim		triangle
+3: Tournament		square
 		
 D1,...,D8
 1: too aggressive/greedy		
